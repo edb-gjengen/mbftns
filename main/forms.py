@@ -1,17 +1,17 @@
 from django import forms
+from django.forms.widgets import RadioSelect
 
-#from radius.models import *
-#
-#class TempUserForm(forms.ModelForm):
-#    # TODO : Move this to radius?
-#    class Meta:
-#        model = TempUser 
 class TempUserForm(forms.Form):
-    who = forms.CharField(label='Hvem')
+    who = forms.CharField(label='Hvem', required=True)
     RANGE_CHOICES = (
-        ('1 day', '1 dag'),
-        ('2 days', '2 dager'),
-        ('7 days', '1 uke (7 dager)'),
+        ('1', '1 dag'),
+        ('2', '2 dager'),
+        ('7', '1 uke (7 dager)'),
     )
-    duration = forms.ChoiceField(label='Varighet', choices=RANGE_CHOICES)
-    why = forms.CharField(label='Hvorfor')
+    duration = forms.TypedChoiceField(
+        label='Varighet',
+        coerce=int,
+        choices=RANGE_CHOICES,
+        widget=RadioSelect,
+        required=True)
+    why = forms.CharField(label='Hvorfor', required=True)

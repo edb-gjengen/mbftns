@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p><a href="{% url download_pdf tempuserlog_id=tempuserlog_id %}" class="btn large primary">Last ned PDF</a></p>
+<a href="{% url system %}" class="btn">Videre »</a>
+
+{% endblock %}

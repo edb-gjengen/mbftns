@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <title>My Title</title>
+        <title>Midlertidig Bruker For Trådløst Nettverk på Chateau Neuf - {{log.id}}</title>
         <style type="text/css">
             @page {
                 size: {{ pagesize }};
@@ -18,9 +18,12 @@
     </head>
     <body>
         <div>
-            {% for item in mylist %}
-                {{ item }}
-            {% endfor %}
+            <h1>Midlertidig Bruker For Trådløst Nettverk på Chateau Neuf</h1>
+            Brukernavn: {{log.username}}<br />
+            Passord: {{ log.password }}<br />
+            Utstedt: {{ log.created }}<br />
+            Gyldig til: {{ log.expires }}<br />
+            <!-- LOGO -->
         </div>
         <div id="footerContent">
             {% block page_foot %}

@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+{{errors}}
 <h2>Lag ny midlertidig bruker</h2>
-<p>
-    OK, du skal få lage en, men først...
-</p>
+<p>OK, du skal få lage en, men først...</p>
 <form method="post" class="form-stacked">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form }}
+    <p>
+    <br />
     <button type="submit" class="btn primary">Lag bruker og hent PDF</button>
-    <a href="{% url main.views.system %}" class="btn">Avbryt</a>
+    <a href="{% url system %}" class="btn">Avbryt</a>
+    </p>
 </form>
 
 {% endblock %}

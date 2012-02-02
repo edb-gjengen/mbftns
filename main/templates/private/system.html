@@ -2,8 +2,8 @@
 
 {% block content %}
 
-<a href="{% url main.views.new %}" class="btn primary">Lag ny midlertidig bruker</a>
-<a href="{% url main.views.list_users %}" class="btn">Vis midlertidige</a>
+<a href="{% url new %}" class="btn primary">Lag ny midlertidig bruker</a>
+<a href="{% url list_users %}" class="btn">Vis midlertidige</a>
 <a href="{% url django.contrib.auth.views.logout %}" class="btn">Logg ut</a>
 
 {% endblock %}
