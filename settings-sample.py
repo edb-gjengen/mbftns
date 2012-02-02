@@ -1,4 +1,3 @@
-# Django settings for mbftn project.
 from os.path import dirname, join
 
 def map_path(target_name):

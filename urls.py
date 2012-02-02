@@ -10,5 +10,5 @@ urlpatterns = patterns('',
     url(r'^accounts/logout', 'django.contrib.auth.views.logout'),
 )
 # for dev
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-urlpatterns += staticfiles_urlpatterns()
+#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+#urlpatterns += staticfiles_urlpatterns()
