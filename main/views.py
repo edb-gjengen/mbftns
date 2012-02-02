@@ -99,5 +99,6 @@ def download_pdf(request, tempuserlog_id=-1):
         {
             'pagesize':'A4',
             'log': log,
-        }
+        },
+        RequestContext(request)
     )

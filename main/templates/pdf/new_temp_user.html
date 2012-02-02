@@ -20,6 +20,13 @@
             .monospace {
                 font-family: monospace;
             }
+            .sub_header {
+                font-size: 0.6em;
+                margin-bottom:1cm;
+            }
+            h1, h2 {
+                margin-bottom:0px;
+            }
             #logo {
                 margin-top: 1cm;
             }
@@ -29,17 +36,22 @@
             {% for userpass in log.userpass_set.all %}
         <div>
             <h1>Midlertidig Bruker For Trådløst Nettverk på Chateau Neuf</h1>
-                Brukernavn: <span class="monospace">{{ userpass.username }}</span><br />
-                Passord: <span class="monospace">{{ userpass.password }}</span><br />
-                Utstedt: {{ log.created }}<br />
-                Gyldig til: {{ log.expires }}<br />
+            <span class="sub_header">Utstedt {{ log.created }}</span>
+            <h2>Din bruker</h2>
+            <strong>Brukernavn:</strong> <span class="monospace">{{ userpass.username }}</span><br />
+            <strong>Passord:</strong> <span class="monospace">{{ userpass.password }}</span><br />
+            <strong>Gyldig til og med:</strong> {{ log.expires|date:"DATE_FORMAT" }}<br />
+            <h2>Trådløst nettverk</h2>
+            Navn (SSID): <span class="monospace">dns-intern</span><br />
         </div>
         <div id="logo">
-            <img src="/home/nikolark/dev/edb/mbftns/static/standard/images/DNSlogo.jpg" />
+            <em>Tjenesten er levert av EDB-gruppa i Kommunikasjonsvavdelingen - kak-edb@studentersamfundet.no</em>
+            <img src="{{ STATIC_URL }}standard/images/edb_brick.jpg" /><br />
+            <img src="{{ STATIC_URL }}standard/images/DNSlogo.jpg" />
         </div>
         <div id="footerContent">
             {% block page_foot %}
-                Page <pdf:pagenumber>
+                Side <pdf:pagenumber>
             {% endblock %}
         </div>
             <pdf:nextpage>
