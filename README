@@ -1,0 +1,3 @@
+Requirements:
+=============
+sudo pip install reportlab pisa html5lib pypdf pil

@@ -12,8 +12,9 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 
 from models import *
+from forms import *
 
-from pdf import render_to_pdf
+from pdf import render_to_pdf, unique_filename
 
 def index(request):
     if request.method == "POST":
@@ -31,7 +32,21 @@ def index(request):
 
 @login_required
 def new(request):
+    if request.method == "POST":
+        form = TempUserForm(data=request.POST)
+        if form.is_valid():
+            # generate and save the filename for the new pdf
+            fn = unique_filename()
+            download_pdf()
+
+    form = TempUserForm()
+
     return render_to_response('private/new.html', locals(), context_instance=RequestContext(request))
+
+@login_required
+def list_users(request):
+    # generic view?
+    return render_to_response('private/list.html', locals(), context_instance=RequestContext(request))
 
 @login_required
 def system(request):

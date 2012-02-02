@@ -5,7 +5,11 @@
 <p>
     OK, du skal få lage en, men først...
 </p>
-{{ form }}
-<a href="{% url main.views.system %}" class="btn">Avbryt</a>
+<form method="post" class="form-stacked">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn primary">Lag bruker og hent PDF</button>
+    <a href="{% url main.views.system %}" class="btn">Avbryt</a>
+</form>
 
 {% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Liste over midlertidige brukere</h2>
+<p>
+Tabell her:<br />
+{{ table }}
+<a href="deleted">Vis utgåtte ...</a>
+</p>
+<a href="{% url main.views.system %}" class="btn">« Tilbake</a>
+
+{% endblock %}
