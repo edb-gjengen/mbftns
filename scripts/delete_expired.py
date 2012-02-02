@@ -16,5 +16,7 @@ setup_environ(settings)
 
 from main.models import *
 from radius.models import *
+# Find expired userpass objects, format into a list
 up_ids = UserPass.objects.filter(log__expires__lte=datetime.now()).values_list('radcheck_id', flat=True)
+# then use the id's in an inner query to delete them
 Radcheck.objects.filter(id__in=list(up_ids)).delete()
