@@ -2,6 +2,16 @@
 
 {% block content %}
 
+{% if messages %}
+<div class="row">
+    <div class="span6">
+    {% for message in messages %}
+    <div class="alert-message warning">{{ message }}</div>
+    {% endfor %}
+    </div>
+</div>
+{% endif %}
+
 {% include "registration/login_form.html" %}
 
 {% endblock %}

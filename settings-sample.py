@@ -172,10 +172,8 @@ AUTH_LDAP_USER_FLAGS_BY_GROUP = {
     "is_staff": "cn=edb,ou=Groups,dc=neuf,dc=no",
     "is_superuser": "cn=edbadmin,ou=Groups,dc=neuf,dc=no"
 }
-AUTH_LDAP_REQUIRE_GROUP = LDAPSearch(
-    "ou=Groups,dc=neuf,dc=no",
-    ldap.SCOPE_ONELEVEL,
-    "(|(cn=dns-styret)(cn=dns-admin)(cn=dns-billettluka)(cn=edb))")
+#AUTH_LDAP_REQUIRE_GROUP = "cn=edb,ou=Groups,dc=neuf,dc=no"
+
 # Group to profile flag mappings, not used.
 AUTH_LDAP_PROFILE_FLAGS_BY_GROUP = {
     #"is_edb": "cn=edb,ou=Groups,dc=neuf,dc=no"
@@ -224,3 +222,5 @@ LOGGING = {
 }
 
 LOGIN_REDIRECT_URL = '/system/'
+# List of required groups to use MBFTNS (enforced per view)
+GROUPS_ALLOWED = ['dns-admin','edb','dns-billettluka','dns-styret']

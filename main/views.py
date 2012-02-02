@@ -20,6 +20,7 @@ from models import *
 from radius.models import *
 from forms import *
 import utils
+from decorators import groups_required
 
 from pdf import render_to_pdf
 
@@ -37,6 +38,7 @@ def index(request):
 
     return render_to_response('public/index.html', locals(), context_instance=RequestContext(request))
 
+@groups_required(settings.GROUPS_ALLOWED)
 @login_required
 def new(request):
     if request.method == "POST":
@@ -74,6 +76,7 @@ def new(request):
 
     return render_to_response('private/new.html', locals(), context_instance=RequestContext(request))
 
+@groups_required(settings.GROUPS_ALLOWED)
 @login_required
 def new_created(request):
     # Retrieve the last id from session
@@ -85,11 +88,13 @@ def new_created(request):
         tempuserlog_id = 0
     return render_to_response('private/new_created.html', locals(), context_instance=RequestContext(request))
 
+@groups_required(settings.GROUPS_ALLOWED)
 @login_required
 def system(request):
     return render_to_response('private/system.html', locals(), context_instance=RequestContext(request))
 
 
+@groups_required(settings.GROUPS_ALLOWED)
 @login_required
 def download_pdf(request, tempuserlog_id=-1):
     log = get_object_or_404(TempUserLog, pk=tempuserlog_id)
