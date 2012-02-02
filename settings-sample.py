@@ -16,7 +16,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'dev.db',                      # Or path to database file if using sqlite3.
+        'NAME': map_path('dev.db'),                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -26,7 +26,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'radius',                # Or path to database file if using sqlite3.
         'USER': 'radius',                # Not used with sqlite3.
-        'PASSWORD': 'lol',  # Not used with sqlite3.
+        'PASSWORD': '',  # Not used with sqlite3.
         'HOST': 'localhost',             # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -45,7 +45,7 @@ TIME_ZONE = 'Europe/Oslo'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'no-nb'
 
 SITE_ID = 1
 
@@ -125,16 +125,80 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
+    'django.contrib.messages',
     'django.contrib.sessions',
     'django.contrib.sites',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.admin',
     'main',
     'radius',
 )
+AUTHENTICATION_BACKENDS = (
+    'django_auth_ldap.backend.LDAPBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+# No cleaningladies.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 60 * 15 # in seconds
+
+# LDAP server URI and BIND_DN, same as db-settings
+AUTH_LDAP_SERVER_URI = 'ldap://pacman.neuf.no'
+AUTH_LDAP_BIND_DN = 'uid=admin,ou=People,dc=neuf,dc=no'
+AUTH_LDAP_BIND_PASSWORD = ''
+
+import ldap
+from django_auth_ldap.config import LDAPSearch, PosixGroupType
+
+# Basic user auth
+AUTH_LDAP_USER_SEARCH = LDAPSearch(
+    "ou=People,dc=neuf,dc=no",
+    ldap.SCOPE_ONELEVEL,
+    "(uid=%(user)s)")
+AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,dc=neuf,dc=no"
+# Basic groups
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+    "ou=Groups,dc=neuf,dc=no",
+    ldap.SCOPE_ONELEVEL,
+    "(objectClass=posixGroup)")
+AUTH_LDAP_GROUP_TYPE = PosixGroupType()
+# Mirror groups on each auth
+AUTH_LDAP_MIRROR_GROUPS = True
+# Group to user flag mappings
+AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    "is_active": "cn=dns-alle,ou=Groups,dc=neuf,dc=no",
+    "is_staff": "cn=edb,ou=Groups,dc=neuf,dc=no",
+    "is_superuser": "cn=edbadmin,ou=Groups,dc=neuf,dc=no"
+}
+AUTH_LDAP_REQUIRE_GROUP = LDAPSearch(
+    "ou=Groups,dc=neuf,dc=no",
+    ldap.SCOPE_ONELEVEL,
+    "(|(cn=dns-styret)(cn=dns-admin)(cn=dns-billettluka)(cn=edb))")
+# Group to profile flag mappings, not used.
+AUTH_LDAP_PROFILE_FLAGS_BY_GROUP = {
+    #"is_edb": "cn=edb,ou=Groups,dc=neuf,dc=no"
+}
+# User attribute mappings
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail",
+}
+# User profile attribute mappings
+AUTH_LDAP_PROFILE_ATTR_MAP = {
+    "home_directory": "homeDirectory"
+}
+# Allways update the django user object on authentication.
+AUTH_LDAP_ALWAYS_UPDATE_USER = True
+
+# Debug logging
+import logging
+logger = logging.getLogger('django_auth_ldap')
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
