@@ -6,11 +6,11 @@ class TempUserLog(models.Model):
     description = models.TextField(max_length=255)
     expires = models.DateTimeField()
     count = models.IntegerField()
-    deleted = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
 class UserPass(models.Model):
-    username = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=50)
+    radcheck_id = models.PositiveIntegerField(unique=True, null=False)
     log = models.ForeignKey(TempUserLog)
     

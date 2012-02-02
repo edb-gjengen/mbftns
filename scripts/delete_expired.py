@@ -16,10 +16,5 @@ setup_environ(settings)
 
 from main.models import *
 from radius.models import *
-logs = TempUserLog.objects.filter(expires__lt=datetime.now(), deleted=False)
-
-for log in logs:
-    for up in log.userpass_set.all():
-        Radcheck.objects.filter(username=up.username).delete()
-    log.deleted = True
-    log.save()
+up_ids = UserPass.objects.filter(log__expires__lte=datetime.now()).values_list('radcheck_id', flat=True)
+Radcheck.objects.filter(id__in=list(up_ids)).delete()

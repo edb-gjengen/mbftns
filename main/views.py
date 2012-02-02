@@ -44,20 +44,28 @@ def new(request):
         if form.is_valid():
             duration = datetime.timedelta(days=form.cleaned_data['duration'])
             expires = datetime.datetime.now() + duration
-            log = TempUserLog(
+            log = TempUserLog.objects.create(
                 description=form.cleaned_data['description'],
                 expires=expires,
                 issued_by=request.user,
                 count=form.cleaned_data['count'])
-            log.save()
             for i in range(form.cleaned_data['count']):
-                up = UserPass.objects.create(
-                    username=utils.generate_username(),
-                    password=utils.generate_password(),
+                username = utils.generate_username()
+                raw_password = utils.generate_password()
+                # Store in Radius
+                rc = Radcheck.objects.create(
+                    username=username,
+                    attribute='NT-Password',
+                    op=':=',
+                    value=utils.ntpass_hash(raw_password))
+                # store raw_password
+                UserPass.objects.create(
+                    username=username,
+                    password=raw_password,
+                    radcheck_id=rc.id,
                     log=log)
             messages.success(request, log.id) # Store the id in session, since we are redirecting
-            
-            messages.success(request, save_to_radius(log)) # Store in Radius
+            messages.success(request, 'Successfully created user(s) in radius database.')
             return HttpResponseRedirect( reverse('main.views.new_created') )
         else:
             form = TempUserForm(request.POST)
@@ -93,13 +101,3 @@ def download_pdf(request, tempuserlog_id=-1):
             'log': log,
         }
     )
-
-def save_to_radius(log):
-    for up in log.userpass_set.all():
-        Radcheck.objects.create(
-            username=up.username,
-            attribute='NT-Password',
-            op=':=',
-            value=utils.ntpass_hash(up.password))
-    return 'Successfully created user(s) in radius database.'
-

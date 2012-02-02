@@ -103,15 +103,3 @@ class Radusergroup(models.Model):
 
     class Meta:
         db_table = u'radusergroup'
-
-class TempUser(models.Model):
-    connection_name = 'radius'
-
-    # TODO : date? who? why?
-    radcheckId = models.ForeignKey(Radcheck)
-    created = models.DateTimeField(auto_now_add=True, null=True)
-    deleteOn = models.DateTimeField( null=True)
-
-    class Meta:
-        db_table = u'radusergroup'
-
