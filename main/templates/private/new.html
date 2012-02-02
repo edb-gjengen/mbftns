@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Lag ny midlertidig bruker</h2>
+<p>
+    OK, du skal få lage en, men først...
+</p>
+{{ form }}
+<a href="{% url main.views.system %}" class="btn">Avbryt</a>
+
+{% endblock %}

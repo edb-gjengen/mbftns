@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <title>{%block title%}MBFTNS{%endblock%}</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}standard/stylesheets/screen.css" type="text/css" media="screen, projection" /)>
+    <link rel="stylesheet" href="{{ STATIC_URL }}standard/stylesheets/print.css" type="text/css" media="print" />
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="{{ STATIC_URL }}standard/stylesheets/ie.css" type="text/css" media="screen, projection" />
+    <![endif]-->
+    {%block headinc %}
+    {%endblock%}
+</head>
+<body>
+    <div class="container">
+        {% include "nav.html" %}
+        <header class="page-header">
+        <h1>MBFTNS</h1>
+        {%block header%}
+        {%endblock%}
+        </header>
+        <div >
+            {%block content%}
+            {%endblock%}
+        </div>
+        <footer class="footer">
+        {%block footer %}
+            <img src="{{ STATIC_URL }}standard/images/edb_brick.png" title="EDB" /><br />
+            <img src="{{ STATIC_URL }}standard/images/DNSlogo.png" />
+        {%endblock%}
+        </footer>
+    </div>
+
+    {%block tailinc %}
+    {%endblock%}
+</body>
+</html>

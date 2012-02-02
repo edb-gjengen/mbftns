@@ -1,0 +1,14 @@
+<form method="post" action="{% url django.contrib.auth.views.login %}">
+    {% if form.non_field_errors %}
+        {{ form.non_field_errors }}<br />
+    {% endif %}
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
+    <label for="id_username">Brukernavn:</label><br />
+    {{ form.username }} {{ form.username.errors }}<br />
+    <label for="id_password">Passord: </label><br />
+    {{ form.password }} {{ form.password.errors }}<br />
+    <br />
+    <input type="submit" value="Logg inn" />
+
+</form>
