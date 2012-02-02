@@ -3,21 +3,23 @@
 {% block content %}
 <h2>Liste over midlertidige brukere</h2>
 <p>
-<table>
+<table id="user_list">
   <tr>
     <th>Produsert</th>
     <th>Produsert av</th>
-    <th>For hvem</th>
+    <th>For hvem/Hvorfor</th>
     <th>Utgår</th>
-    <th>PDF</th>
+    <th>Antall</th>
+    <th>Skriv ut</th>
   </tr>
 {% for user in object_list %}
   <tr>
     <td>{{ user.created }}</td>
     <td>{{ user.issued_by }}</td>
-    <td>{{ user.who }}</td>
+    <td>{{ user.description }}</td>
     <td>{{ user.expires|timeuntil}}</td>
-    <td><a href="{% url download_pdf tempuserlog_id=user.id %}">PDF-icon</a></td>
+    <td>{{ user.count }}</td>
+    <td><a href="{% url download_pdf tempuserlog_id=user.id %}"><img src="{{STATIC_URL}}standard/images/printer.png" class="list" /></a></td>
   </tr>
 {%endfor %}
 </table>

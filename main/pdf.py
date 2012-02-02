@@ -3,6 +3,7 @@
 # Ref:
 #  - http://stackoverflow.com/questions/1377446/html-to-pdf-for-a-django-site
 #  - http://stackoverflow.com/questions/2179958/django-pisa-adding-images-to-pdf-output ?
+#  - http://web.archive.org/web/20090413054650/http://www.xhtml2pdf.com/doc/pisa-en.html
 
 import cStringIO as StringIO
 import ho.pisa as pisa

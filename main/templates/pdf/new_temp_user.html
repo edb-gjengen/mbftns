@@ -3,6 +3,9 @@
     <head>
         <title>Midlertidig Bruker For Trådløst Nettverk på Chateau Neuf - {{log.id}}</title>
         <style type="text/css">
+            body {
+                font-size:1.7em;
+            }
             @page {
                 size: {{ pagesize }};
                 margin: 1cm;
@@ -14,21 +17,32 @@
                     height: 1cm;
                 }
             }
+            .monospace {
+                font-family: monospace;
+            }
+            #logo {
+                margin-top: 1cm;
+            }
         </style>
     </head>
     <body>
+            {% for userpass in log.userpass_set.all %}
         <div>
             <h1>Midlertidig Bruker For Trådløst Nettverk på Chateau Neuf</h1>
-            Brukernavn: {{log.username}}<br />
-            Passord: {{ log.password }}<br />
-            Utstedt: {{ log.created }}<br />
-            Gyldig til: {{ log.expires }}<br />
-            <!-- LOGO -->
+                Brukernavn: <span class="monospace">{{ userpass.username }}</span><br />
+                Passord: <span class="monospace">{{ userpass.password }}</span><br />
+                Utstedt: {{ log.created }}<br />
+                Gyldig til: {{ log.expires }}<br />
+        </div>
+        <div id="logo">
+            <img src="/home/nikolark/dev/edb/mbftns/static/standard/images/DNSlogo.jpg" />
         </div>
         <div id="footerContent">
             {% block page_foot %}
                 Page <pdf:pagenumber>
             {% endblock %}
         </div>
+            <pdf:nextpage>
+            {% endfor %}
     </body>
 </html>

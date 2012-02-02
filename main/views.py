@@ -17,7 +17,9 @@ from django.contrib import messages
 
 
 from models import *
+from radius.models import *
 from forms import *
+import utils
 
 from pdf import render_to_pdf
 
@@ -43,14 +45,19 @@ def new(request):
             duration = datetime.timedelta(days=form.cleaned_data['duration'])
             expires = datetime.datetime.now() + duration
             log = TempUserLog(
-                who=form.cleaned_data['who'],
-                why=form.cleaned_data['why'],
+                description=form.cleaned_data['description'],
                 expires=expires,
-                issued_by=request.user)
-            #TODO : generate username and pasword
-            #TODO : save in radiusdb
+                issued_by=request.user,
+                count=form.cleaned_data['count'])
             log.save()
+            for i in range(form.cleaned_data['count']):
+                up = UserPass.objects.create(
+                    username=utils.generate_username(),
+                    password=utils.generate_password(),
+                    log=log)
             messages.success(request, log.id) # Store the id in session, since we are redirecting
+            
+            messages.success(request, save_to_radius(log)) # Store in Radius
             return HttpResponseRedirect( reverse('main.views.new_created') )
         else:
             form = TempUserForm(request.POST)
@@ -64,15 +71,11 @@ def new_created(request):
     # Retrieve the last id from session
     storage = messages.get_messages(request)
     msgs = [message for message in storage]
-    tempuserlog_id = msgs[0].message
+    if len(msgs) > 0:
+        tempuserlog_id = msgs[0].message
+    else:
+        tempuserlog_id = 0
     return render_to_response('private/new_created.html', locals(), context_instance=RequestContext(request))
-
-
-@login_required
-def list_users(request):
-    # generic view?
-    users = TempUserLog.objects.all()
-    return render_to_response('private/list.html', locals(), context_instance=RequestContext(request))
 
 @login_required
 def system(request):
@@ -91,8 +94,12 @@ def download_pdf(request, tempuserlog_id=-1):
         }
     )
 
-def client_status(request):
-    # example json view
-    data = { 'example' : 'json_view' }
-    return HttpResponse(json.dumps(data), content_type='application/javascript; charset=utf8')
+def save_to_radius(log):
+    for up in log.userpass_set.all():
+        Radcheck.objects.create(
+            username=up.username,
+            attribute='NT-Password',
+            op=':=',
+            value=utils.ntpass_hash(up.password))
+    return 'Successfully created user(s) in radius database.'
 

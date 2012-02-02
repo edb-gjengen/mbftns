@@ -1,8 +1,7 @@
 from django import forms
-from django.forms.widgets import RadioSelect
+from django.forms.widgets import RadioSelect, Textarea
 
 class TempUserForm(forms.Form):
-    who = forms.CharField(label='Hvem', required=True)
     RANGE_CHOICES = (
         ('1', '1 dag'),
         ('2', '2 dager'),
@@ -14,4 +13,14 @@ class TempUserForm(forms.Form):
         choices=RANGE_CHOICES,
         widget=RadioSelect,
         required=True)
-    why = forms.CharField(label='Hvorfor', required=True)
+    description = forms.CharField(
+        label='Hvem og hvorfor',
+        widget=Textarea,
+        max_length=255,
+        required=True)
+    count = forms.IntegerField(
+        label='Hvor mange',
+        initial=1,
+        required=True,
+        min_value=1,
+        max_value=30)

@@ -16,6 +16,14 @@ html {
         article {
         }
         footer {
+            position:relative;
+            top: 100px;
         }
     }
+}
+img.list {
+    vertical-align:middle;
+}
+ul {
+    list-style:none;
 }
