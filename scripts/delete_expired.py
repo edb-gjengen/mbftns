@@ -4,7 +4,7 @@ import os
 import sys
 from datetime import datetime
 
-project_path = '/var/www/neuf.no/mbftns/mbftns/'
+project_path = '/opt/django/mbftns/mbftns/'
 if project_path not in sys.path:
     sys.path.append(project_path)
 

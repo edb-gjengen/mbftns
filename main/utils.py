@@ -4,6 +4,7 @@ import hashlib
 from main.models import UserPass
 
 def generate_username():
+    # FIXME dangerous and stupid @ above 5k usernames
     length = 4
     username = "guest{0}".format(''.join(random.choice(string.digits) for x in range(length)))
     # unique
