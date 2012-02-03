@@ -7,10 +7,10 @@ def groups_required(*group_names):
         if u.is_authenticated():
             if bool(u.groups.filter(name__in=group_names)) | u.is_superuser:
                 return True
-        # Gi brukeren beskjed (muligens)
-        message = "Jeg kan ikke gi deg tilgang fordi \
-            du er ikke i noen av disse gruppene: {0}.".format(
-                ", ".join(settings.GROUPS_ALLOWED))
-        u.message_set.create(message=message)
+            # Gi brukeren beskjed (muligens)
+            message = "Jeg kan ikke gi deg tilgang fordi \
+                du er ikke i noen av disse gruppene: {0}.".format(
+                    ", ".join(settings.GROUPS_ALLOWED))
+            u.message_set.create(message=message)
         return False
     return user_passes_test(in_groups)
