@@ -108,7 +108,7 @@ def list(request, page=0):
         logout(request)
         return HttpResponseRedirect( '/accounts/login/' )
 
-    queryset =  TempUserLog.objects.filter(expires__gt=datetime.datetime.now()).order_by('created').reverse(),
+    users = TempUserLog.objects.filter(expires__gt=datetime.datetime.now()).order_by('created').reverse()
     return render_to_response('private/list.html', locals(), context_instance=RequestContext(request))
 
 
