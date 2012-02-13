@@ -4,7 +4,7 @@ import datetime
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ObjectDoesNotExist
@@ -14,13 +14,13 @@ from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+from django.views.generic.list_detail import object_list # override this to get pagination
 
 
 from models import *
 from radius.models import *
 from forms import *
-import utils
-from decorators import groups_required
+import utils, auth
 
 from pdf import render_to_pdf
 
@@ -38,9 +38,12 @@ def index(request):
 
     return render_to_response('public/index.html', locals(), context_instance=RequestContext(request))
 
-@groups_required(settings.GROUPS_ALLOWED)
 @login_required
 def new(request):
+    if not auth.in_groups(request):
+        logout(request)
+        return HttpResponseRedirect( '/accounts/login/' )
+
     if request.method == "POST":
         form = TempUserForm(data=request.POST)
         if form.is_valid():
@@ -76,9 +79,12 @@ def new(request):
 
     return render_to_response('private/new.html', locals(), context_instance=RequestContext(request))
 
-@groups_required(settings.GROUPS_ALLOWED)
 @login_required
 def new_created(request):
+    if not auth.in_groups(request):
+        logout(request)
+        return HttpResponseRedirect( '/accounts/login/' )
+
     # Retrieve the last id from session
     storage = messages.get_messages(request)
     msgs = [message for message in storage]
@@ -88,15 +94,30 @@ def new_created(request):
         tempuserlog_id = 0
     return render_to_response('private/new_created.html', locals(), context_instance=RequestContext(request))
 
-@groups_required(settings.GROUPS_ALLOWED)
 @login_required
 def system(request):
+    if not auth.in_groups(request):
+        logout(request)
+        return HttpResponseRedirect( '/accounts/login/' )
+
     return render_to_response('private/system.html', locals(), context_instance=RequestContext(request))
 
+@login_required
+def list(request, page=0):
+    if not auth.in_groups(request):
+        logout(request)
+        return HttpResponseRedirect( '/accounts/login/' )
 
-@groups_required(settings.GROUPS_ALLOWED)
+    queryset =  TempUserLog.objects.filter(expires__gt=datetime.datetime.now()).order_by('created').reverse(),
+    return render_to_response('private/list.html', locals(), context_instance=RequestContext(request))
+
+
 @login_required
 def download_pdf(request, tempuserlog_id=-1):
+    if not auth.in_groups(request):
+        logout(request)
+        return HttpResponseRedirect( '/accounts/login/' )
+
     log = get_object_or_404(TempUserLog, pk=tempuserlog_id)
 
     return render_to_pdf(
