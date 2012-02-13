@@ -5,7 +5,6 @@ def groups_required(*group_names):
     """Requires user membership in at least one of the groups passed in."""
     def in_groups(u):
         if u.is_authenticated():
-            print u.groups
             if bool(u.groups.filter(name__in=group_names)) or u.is_superuser:
                 return True
             # Gi brukeren beskjed (muligens)
