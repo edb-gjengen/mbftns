@@ -2,16 +2,44 @@
 
 {% block content %}
 {{errors}}
-<h2>Lag ny midlertidig bruker</h2>
-<p>OK, du skal få lage en, men først...</p>
-<form method="post" class="form-stacked">
+<form method="post" class="form-horizontal">
+    <legend>Lag ny midlertidig bruker</legend>
     {% csrf_token %}
-    {{ form }}
-    <p>
-    <br />
-    <button type="submit" class="btn primary">Lag bruker og hent PDF</button>
+    <div class="control-group">
+        <label class="control-label" for="id_duration">{{ form.duration.label }}</label>
+        <div class="controls">
+            {{ form.duration }} {{ form.duration.errors }}
+            <br />
+            <br />
+            <div class="btn-group">
+                <button class="btn days" data-days="1">1 dag</button>
+                <button class="btn days" data-days="2">2 dager</button>
+                <button class="btn days" data-days="7">1 uke</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="id_description">{{ form.description.label }}</label>
+        <div class="controls">
+            {{ form.description }} {{ form.description.errors }}
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label" for="id_count">{{ form.count.label }}</label>
+        <div class="controls">
+            {{ form.count }} {{ form.count.errors }}
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Lag bruker og hent PDF</button>
     <a href="{% url system %}" class="btn">Avbryt</a>
-    </p>
 </form>
+
+{% endblock %}
+{% block tailinc %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.8.1.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/form.js"></script>
 
 {% endblock %}
